@@ -1,29 +1,11 @@
-import React, { Suspense, useRef } from "react";
+import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF, Html } from "@react-three/drei";
-import MoodActivityPanel from "./MoodActivityPanel";
-import Draggable from "./Draggable";
-
-const moodAnchor = [0, 1.2, 0.5]; // Centered horizontally
+import { OrbitControls, useGLTF } from "@react-three/drei";
 
 function JukeboxModel({ mood, setMood, activity, setActivity, showStart, onStart }) {
   const { scene } = useGLTF("/src/assets/jukebox.glb");
   return (
-    <>
-      <primitive object={scene} scale={1.5} />
-      <Html position={moodAnchor} center zIndexRange={[10, 20]}>
-        <Draggable defaultPosition={{ x: window.innerWidth / 2 - 180, y: 80 }}>
-          <MoodActivityPanel
-            mood={mood}
-            setMood={setMood}
-            activity={activity}
-            setActivity={setActivity}
-            showStart={showStart}
-            onStart={onStart}
-          />
-        </Draggable>
-      </Html>
-    </>
+    <primitive object={scene} scale={1.5} />
   );
 }
 
@@ -31,8 +13,14 @@ export default function Jukebox3D({ mood, setMood, activity, setActivity, showSt
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <Canvas camera={{ position: [0, 1.2, 5], fov: 50 }}>
-        <ambientLight intensity={0.7} />
+        <ambientLight color={0x404040} intensity={1} />
         <directionalLight position={[5, 10, 7]} intensity={1} />
+        <hemisphereLight
+          skyColor={0xffffff}
+          groundColor={0x444444}
+          intensity={0.6}
+          position={[0, 10, 0]}
+        />
         <Suspense fallback={null}>
           <JukeboxModel
             mood={mood}
